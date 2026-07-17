@@ -1599,6 +1599,52 @@
     }
 
     /* ============================================================
+   OUR ALBUM — flip-through photo book
+   ============================================================ */
+    .flipbook{position:relative;width:min(94vw,760px);aspect-ratio:3/2;margin:12px auto 4px;perspective:2200px;-webkit-perspective:2200px;touch-action:pan-y;}
+    .fb-stage{position:absolute;inset:0;transform-style:preserve-3d;}
+    .fb-base{position:absolute;top:0;height:100%;width:50%;background:linear-gradient(160deg,#fffdf8,#fdf2e6);}
+    .fb-base-left{left:0;border-radius:12px 0 0 12px;box-shadow:inset 8px 0 22px -12px rgba(120,70,60,.3);}
+    .fb-base-right{left:50%;border-radius:0 12px 12px 0;box-shadow:inset -8px 0 22px -12px rgba(120,70,60,.3);}
+    .fb-base::after{content:"❤";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:rgba(217,154,134,.16);font-size:clamp(30px,7vw,48px);}
+    .fb-spine{position:absolute;top:2px;bottom:2px;left:50%;width:3px;transform:translateX(-1.5px);z-index:2;pointer-events:none;
+      background:linear-gradient(90deg,rgba(120,70,60,.28),rgba(120,70,60,.02),rgba(120,70,60,.28));}
+    .leaf{position:absolute;top:0;left:50%;width:50%;height:100%;transform-origin:left center;transform-style:preserve-3d;
+      transition:transform .95s cubic-bezier(.3,.5,.2,1);}
+    .leaf.flipped{transform:rotateY(-180deg);}
+    .leaf-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden;
+      background:linear-gradient(160deg,#fffdf8,#fdf2e6);}
+    .leaf-face.front{border-radius:0 12px 12px 0;box-shadow:inset 10px 0 20px -12px rgba(120,70,60,.25);}
+    .leaf-face.back{transform:rotateY(180deg);border-radius:12px 0 0 12px;box-shadow:inset -10px 0 20px -12px rgba(120,70,60,.25);}
+    .fb-page{padding:13px 13px 22px;}
+    .fb-grid{display:grid;gap:7px;width:100%;height:100%;}
+    .fb-grid.n1{grid-template:1fr/1fr;}
+    .fb-grid.n2{grid-template:1fr 1fr/1fr;}
+    .fb-grid.n3,.fb-grid.n4{grid-template:1fr 1fr/1fr 1fr;}
+    .fb-slot{background:#fff;border-radius:4px;overflow:hidden;box-shadow:0 4px 10px -6px rgba(150,90,80,.55);
+      display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;padding:4px;}
+    .fb-slot img,.fb-slot video{width:100%;height:100%;object-fit:contain;display:block;}
+    .fb-slot .play-badge{border-radius:4px;}
+    .fb-num{position:absolute;bottom:5px;left:0;right:0;text-align:center;font-family:var(--serif);font-style:italic;font-size:.78rem;color:var(--ink-soft);}
+    .fb-cover,.fb-end{display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;
+      background:repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 3px,transparent 3px 6px),linear-gradient(150deg,var(--rose-gold),var(--blush-deep) 62%,var(--peach));}
+    .fb-cover .fc-frame,.fb-end .fc-frame{border:1.5px solid rgba(255,255,255,.55);border-radius:8px;margin:12px;padding:16px 14px;}
+    .fc-k{display:block;text-transform:uppercase;letter-spacing:4px;font-size:10px;font-weight:700;opacity:.9;}
+    .fc-t{display:block;font-family:var(--script);font-size:clamp(1.9rem,7.5vw,3rem);line-height:1.1;margin:4px 0 2px;text-shadow:0 3px 14px rgba(90,45,40,.45);}
+    .fc-r{display:block;width:48px;height:1px;margin:8px auto;background:rgba(255,255,255,.6);}
+    .fc-s{display:block;font-family:var(--serif);letter-spacing:2px;font-size:12px;opacity:.95;}
+    .fc-open{display:block;margin-top:12px;font-size:11px;letter-spacing:1px;opacity:.85;animation:pulseSoft 2.2s ease-in-out infinite;}
+    @keyframes pulseSoft{0%,100%{opacity:.5;}50%{opacity:1;}}
+    .fb-blank{background:linear-gradient(160deg,#fdf2e6,#fbead9);}
+    .fb-controls{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:16px;}
+    .fb-btn{width:50px;height:50px;border-radius:50%;background:rgba(255,253,251,.92);color:var(--rose-gold-deep);font-size:24px;line-height:1;
+      box-shadow:var(--shadow-soft),inset 0 0 0 1px rgba(231,154,166,.3);display:flex;align-items:center;justify-content:center;transition:transform .25s;}
+    .fb-btn:active{transform:scale(.9);}
+    .fb-btn:disabled{opacity:.35;cursor:default;}
+    .fb-progress{font-family:var(--serif);font-style:italic;color:var(--ink-soft);font-size:.92rem;min-width:130px;text-align:center;}
+    @media(prefers-reduced-motion:reduce){.leaf{transition:none;}}
+
+    /* ============================================================
    LIGHTBOX
    ============================================================ */
     #lightbox {
@@ -2032,14 +2078,26 @@
       </div>
     </section>
 
-    <!-- 4. PHOTO & VIDEO GALLERY -->
-    <section class="section">
+    <!-- 4. OUR ALBUM (photo book) -->
+    <section class="section album-section">
       <div class="wrap">
-        <p class="eyebrow">us, in moments</p>
+        <p class="eyebrow">our little book</p>
         <div class="h-deco"></div>
-        <h2 class="section-title">My favourite gallery</h2>
-        <p class="section-sub">Tap any moment to hold it a little longer.</p>
-        <div class="gallery" id="gallery"></div>
+        <h2 class="section-title">Our album</h2>
+        <p class="section-sub">Tap the right or left side, swipe, or use the arrows to turn the pages — tap a photo to open it.</p>
+
+        <div class="flipbook reveal-fade" id="flipbook">
+          <div class="fb-stage" id="fbStage">
+            <div class="fb-base fb-base-left"></div>
+            <div class="fb-base fb-base-right"></div>
+          </div>
+          <div class="fb-spine"></div>
+        </div>
+        <div class="fb-controls">
+          <button class="fb-btn" id="fbPrev" aria-label="Previous page">‹</button>
+          <span class="fb-progress" id="fbProgress">tap to open the cover</span>
+          <button class="fb-btn" id="fbNext" aria-label="Next page">›</button>
+        </div>
       </div>
     </section>
 
@@ -2097,7 +2155,7 @@
     const CONFIG = {
 
       // ---- BACKGROUND SONG (loops, starts on unlock) ----
-      song: 'assets/Tujh Mein Rab Dikhta Hai Song  Rab Ne Bana Di Jodi  Shah Rukh Khan, Anushka Sharma  Roop Kumar.mp3',
+      song: 'assets/Tamer Hosny ... Sagel Ya Tarekh - 2022  تامر حسني ... سجل يا تاريخ.mp3',
       // e.g. swap to:  'assets/Tum Hi Ho.mp3'
 
       // ---- ANNIVERSARY (day, month, year) ----
@@ -2106,15 +2164,15 @@
       // ---- YOUR STORY TIMELINE ----  (your words, kept exactly — edit freely)
       timeline: [
         {
-          date: 'Marsa',
-          title: 'kwayes Tey',
-          caption: 'nhebkk',
-          photo: 'assets/Eya/IMG-20250814-WA0000.jpg'
+          date: 'chofo marti',
+          title: 'ma7lek bel hijeb',
+          caption: 'rabi yehmik',
+          photo: 'assets/Eya/IMG-20260717-WA0055.jpg'
         },
         {
-          date: '3ch9ii',
+          date: 'mafia',
           title: 'nhebkkk',
-          caption: 'ma7lek',
+          caption: 'rouhyy enty  ',
           photo: 'assets/Eya/IMG-20260717-WA0086.jpg'
         },
         {
@@ -2147,47 +2205,43 @@
        If you add or remove files, just add/remove the filename in the right list. */
     const MEDIA = {
       images: [
-        'IMG-20260706-WA0021.jpg', 'IMG-20260717-WA0072.jpg', 'IMG-20260717-WA0078.jpg',
-        'IMG-20260717-WA0020.jpg', 'IMG-20260717-WA0046.jpg', 'IMG_20250518_170630.jpg',
-        'IMG-20250814-WA0000.jpg', 'IMG-20260717-WA0088.jpg', 'IMG-20260717-WA0104.jpg',
-        '1784301145676.jpg', 'IMG-20260717-WA0022.jpg', 'IMG-20260717-WA0045.jpg',
-        'IMG-20260717-WA0056.jpg', 'IMG-20260717-WA0100.jpg', 'IMG-20260717-WA0089.jpg',
-        'IMG-20260717-WA0043.jpg', 'IMG-20260717-WA0099.jpg', 'IMG-20260717-WA0032.jpg',
-        'IMG-20260717-WA0074.jpg', 'IMG-20260717-WA0110.jpg', 'IMG-20260717-WA0048.jpg',
-        'IMG-20260717-WA0027.jpg', 'Snapchat-1760708115.jpg', 'IMG-20260717-WA0050.jpg',
-        'IMG-20260717-WA0025.jpg', 'IMG-20260717-WA0083.jpg', 'IMG-20260717-WA0093.jpg',
-        'IMG-20260717-WA0057.jpg', 'IMG-20260717-WA0095.jpg', 'IMG-20260717-WA0047.jpg',
-        'IMG-20260717-WA0098.jpg', 'IMG-20260717-WA0069.jpg', 'IMG-20260717-WA0039.jpg',
-        'IMG-20260717-WA0071.jpg', 'IMG-20260717-WA0029.jpg', 'IMG-20260717-WA0087.jpg',
-        'IMG-20260717-WA0017.jpg', 'IMG-20260717-WA0103.jpg', 'IMG-20260717-WA0105.jpg',
-        'IMG-20260717-WA0062.jpg', '_storage_emulated_0_Android_media_com.whatsapp_WhatsApp_Media_WhatsApp Images_IMG-20250814-WA0007.jpg', 'IMG-20250816-WA0004.jpg',
-        'IMG-20260717-WA0044.jpg', 'IMG-20260717-WA0054.jpg', 'IMG-20260717-WA0084.jpg',
-        'IMG_20240709_192250.jpg', 'IMG-20260717-WA0028.jpg',
-        'IMG-20260717-WA0097.jpg', 'IMG-20260717-WA0064.jpg', 'IMG-20260717-WA0092.jpg',
-        'IMG-20260717-WA0041.jpg', 'IMG_20260509_140110.jpg', 'IMG-20260717-WA0023.jpg',
-        'IMG-20260717-WA0085.jpg', 'IMG_20240816_194551.jpg', 'IMG-20260717-WA0086.jpg',
-        'IMG-20260717-WA0080.jpg', 'IMG-20260717-WA0079.jpg', 'IMG-20260717-WA0096.jpg',
-        'IMG-20260717-WA0066.jpg', 'IMG-20260717-WA0031.jpg', 'IMG-20260717-WA0038.jpg',
-        'IMG-20260717-WA0026.jpg', '_storage_emulated_0_Android_media_com.whatsapp_WhatsApp_Media_WhatsApp Images_IMG-20250814-WA0002.jpg', 'IMG_20260710_200157_625.webp',
-        'IMG-20260717-WA0049.jpg', 'IMG-20260717-WA0111.jpg', 'IMG-20260717-WA0036.jpg',
-        'IMG-20260717-WA0076.jpg', 'IMG_20250409_183308.jpg', 'IMG-20260717-WA0024.jpg',
-        'IMG-20260717-WA0077.jpg', 'IMG_20241209_155515.jpg', 'IMG-20260717-WA0063.jpg',
-        '1.jpg', 'IMG-20260717-WA0107.jpg', 'IMG-20260717-WA0101.jpg',
-        'IMG-20260717-WA0073.jpg', 'IMG-20260717-WA0112.jpg', 'IMG-20260717-WA0109.jpg',
-        'IMG-20260717-WA0037.jpg', 'IMG-20260717-WA0108.jpg', 'IMG-20260717-WA0065.jpg',
-        'IMG_20251117_150423.jpg', 'IMG-20260717-WA0021.jpg', 'IMG-20260717-WA0091.jpg',
-        'IMG-20260717-WA0059.jpg', 'IMG-20260717-WA0051.jpg', 'IMG-20260717-WA0106.jpg',
-        'IMG-20260717-WA0067.jpg', 'IMG-20260717-WA0068.jpg', 'IMG-20260717-WA0042.jpg',
-        'IMG-20260717-WA0094.jpg', 'IMG-20260717-WA0019.jpg', 'IMG-20260717-WA0034.jpg',
-        'IMG-20260717-WA0058.jpg', 'IMG-20260717-WA0035.jpg', 'IMG-20260717-WA0055.jpg',
-        'IMG-20260717-WA0033.jpg', 'IMG-20260717-WA0018.jpg', 'IMG-20260717-WA0075.jpg',
-        'IMG_20240914_150122.jpg', 'IMG-20260717-WA0102.jpg', 'IMG-20260717-WA0040.jpg',
-        'IMG-20260717-WA0081.jpg', 'IMG-20260717-WA0090.jpg'
+        'IMG-20260717-WA0087.jpg', 'IMG-20260717-WA0040.jpg', 'IMG-20260717-WA0033.jpg',
+        'IMG-20260717-WA0067.jpg', 'IMG-20260717-WA0060.jpg', 'IMG-20260717-WA0019.jpg',
+        'IMG-20260717-WA0061.jpg', 'IMG-20260717-WA0021.jpg', 'IMG-20260717-WA0096.jpg',
+        'IMG-20260717-WA0091.jpg', 'IMG-20260717-WA0080.jpg', 'IMG-20260717-WA0030.jpg',
+        'IMG-20260717-WA0095.jpg', 'IMG-20260717-WA0100.jpg', 'IMG-20260717-WA0088.jpg',
+        'IMG-20260717-WA0039.jpg', 'IMG-20260717-WA0058.jpg', 'IMG-20260717-WA0052.jpg',
+        'IMG-20260717-WA0046.jpg', 'IMG-20260717-WA0097.jpg', 'IMG-20260717-WA0022.jpg',
+        'IMG-20260717-WA0076.jpg', 'IMG-20260717-WA0071.jpg', 'IMG-20260717-WA0018.jpg',
+        'IMG-20260717-WA0044.jpg', 'IMG-20260717-WA0110.jpg', 'IMG-20260717-WA0081.jpg',
+        'IMG-20260717-WA0047.jpg', 'IMG-20260717-WA0072.jpg', 'IMG-20260717-WA0020.jpg',
+        'IMG-20260717-WA0105.jpg', 'IMG-20260717-WA0029.jpg', 'IMG-20260717-WA0057.jpg',
+        'IMG-20260717-WA0077.jpg', 'IMG-20260717-WA0111.jpg', 'IMG-20260717-WA0069.jpg',
+        'IMG-20260717-WA0034.jpg', 'IMG-20260717-WA0064.jpg', 'IMG-20260717-WA0108.jpg',
+        'IMG-20260717-WA0112.jpg', 'IMG-20260717-WA0085.jpg', 'IMG-20260717-WA0025.jpg',
+        'IMG-20260717-WA0094.jpg', 'IMG-20260717-WA0090.jpg', 'IMG-20260717-WA0043.jpg',
+        'IMG-20260717-WA0031.jpg', 'IMG-20260717-WA0074.jpg', 'IMG-20260717-WA0107.jpg',
+        'IMG-20260717-WA0109.jpg', 'IMG-20260717-WA0032.jpg', 'IMG-20260717-WA0073.jpg',
+        'IMG-20260717-WA0028.jpg', 'IMG-20260717-WA0068.jpg', 'IMG-20260717-WA0051.jpg',
+        'IMG-20260717-WA0045.jpg', 'IMG-20260717-WA0089.jpg', 'IMG-20260717-WA0086.jpg',
+        'IMG-20260717-WA0099.jpg', 'IMG-20260717-WA0050.jpg', 'IMG-20260717-WA0027.jpg',
+        'IMG-20260717-WA0066.jpg', 'IMG-20260717-WA0101.jpg', 'IMG-20260717-WA0056.jpg',
+        'IMG-20260717-WA0017.jpg', 'IMG-20260717-WA0054.jpg', 'IMG-20260717-WA0103.jpg',
+        'IMG-20260717-WA0065.jpg', 'IMG-20260717-WA0098.jpg', 'IMG-20260717-WA0078.jpg',
+        'IMG-20260717-WA0038.jpg', 'IMG-20260717-WA0048.jpg', 'IMG-20260717-WA0059.jpg',
+        'IMG-20260717-WA0023.jpg', 'IMG-20260717-WA0026.jpg', 'IMG-20260717-WA0079.jpg',
+        'IMG-20260717-WA0102.jpg', 'IMG-20260717-WA0049.jpg', 'IMG-20260717-WA0093.jpg',
+        'IMG-20260717-WA0062.jpg', 'IMG-20260717-WA0063.jpg', 'IMG-20260717-WA0042.jpg',
+        'IMG-20260717-WA0084.jpg', 'IMG-20260717-WA0106.jpg', 'IMG-20260717-WA0036.jpg',
+        'IMG-20260717-WA0055.jpg', 'IMG-20260717-WA0037.jpg', 'IMG-20260717-WA0053.jpg',
+        'IMG-20260717-WA0035.jpg', 'IMG-20260717-WA0024.jpg', 'IMG-20260717-WA0070.jpg',
+        'IMG-20260717-WA0104.jpg', 'IMG-20260717-WA0092.jpg', 'IMG-20260717-WA0041.jpg',
+        'IMG-20260717-WA0075.jpg', 'IMG-20260717-WA0083.jpg'
       ],
       videos: [
-        'VID-20260704-WA0027.mp4', 'VID-20260717-WA0082.mp4', 'VID-20260717-WA0113.mp4',
-        'VID-20260717-WA0114.mp4', 'VID-20260717-WA0115.mp4', 'VID-20260717-WA0116.mp4',
-        'VID-20260717-WA0117.mp4', 'VID-20260717-WA0118.mp4', 'VID-20260717-WA0119.mp4'
+        'VID-20260717-WA0082.mp4', 'VID-20260717-WA0113.mp4', 'VID-20260717-WA0114.mp4',
+        'VID-20260717-WA0115.mp4', 'VID-20260717-WA0116.mp4', 'VID-20260717-WA0117.mp4',
+        'VID-20260717-WA0118.mp4', 'VID-20260717-WA0119.mp4'
       ]
     };
 
@@ -2257,29 +2311,111 @@
         vids.forEach((v, i) => { out.splice(Math.min(out.length, (i + 1) * gap + i), 0, v); });
         return out;
       })();
-      (function renderGallery() {
-        const box = $('#gallery');
-        galleryItems.forEach(item => {
-          const wrap = document.createElement('div');
-          wrap.className = 'g-item';
-          if (item.type === 'video' && !isPh(item.src)) {
-            const v = document.createElement('video');
-            v.src = enc(item.src); v.muted = true; v.playsInline = true; v.preload = 'metadata';
-            v.setAttribute('playsinline', '');
-            wrap.appendChild(v);
-            const b = document.createElement('div'); b.className = 'play-badge'; wrap.appendChild(b);
-          } else {
-            wrap.appendChild(mediaTile(item.src));
-          }
-          if (item.caption) { const c = document.createElement('div'); c.className = 'g-cap'; c.textContent = item.caption; wrap.appendChild(c); }
+      /* =========================================================
+         OUR ALBUM — a real flip-through photo book
+         ========================================================= */
+      (function buildFlipbook() {
+        const stage = $('#fbStage'), bookEl = $('#flipbook');
+        if (!stage || !bookEl) return;
+        const PER = 4;                          // photos per page (2x2)
 
-          if (!isPh(item.src)) {
-            const idx = viewable.length;
-            viewable.push(item);
-            wrap.addEventListener('click', () => openLightbox(idx));
+        // group photos into pages, then wrap pages between a cover + end page
+        const pages = [];
+        for (let i = 0; i < galleryItems.length; i += PER) pages.push(galleryItems.slice(i, i + PER));
+        const faces = [{ type: 'cover' }];
+        pages.forEach((items, idx) => faces.push({ type: 'page', items: items, no: idx + 1 }));
+        faces.push({ type: 'end' });
+        if (faces.length % 2) faces.push({ type: 'blank' });   // pad so leaves pair up
+        const leafCount = faces.length / 2;
+
+        function makeSlot(item) {
+          const slot = document.createElement('div'); slot.className = 'fb-slot';
+          let node;
+          if (item.type === 'video' && !isPh(item.src)) {
+            node = document.createElement('video');
+            node.muted = true; node.playsInline = true; node.preload = 'metadata';
+            node.setAttribute('playsinline', ''); node.dataset.src = enc(item.src);
+            slot.appendChild(node);
+            const b = document.createElement('div'); b.className = 'play-badge'; slot.appendChild(b);
+          } else {
+            node = document.createElement('img');
+            node.loading = 'lazy'; node.decoding = 'async'; node.alt = 'Us';
+            node.dataset.src = enc(item.src);
+            node.onerror = () => { slot.style.visibility = 'hidden'; };
           }
-          box.appendChild(wrap);
+          if (node.tagName === 'IMG') slot.appendChild(node);
+          if (!isPh(item.src)) {
+            const idx = viewable.length; viewable.push(item);
+            slot.addEventListener('click', (e) => { e.stopPropagation(); openLightbox(idx); });
+          }
+          return slot;
+        }
+        function makeFace(face) {
+          const el = document.createElement('div'); el.className = 'leaf-face';
+          if (face.type === 'cover') {
+            el.classList.add('fb-cover');
+            el.innerHTML = '<div class="fc-frame"><span class="fc-k">the story of</span><span class="fc-t">Eya &amp; Raed</span><span class="fc-r"></span><span class="fc-s">22 · 12 · 2022</span><span class="fc-open">tap to open ›</span></div>';
+          } else if (face.type === 'end') {
+            el.classList.add('fb-end');
+            el.innerHTML = '<div class="fc-frame"><span class="fc-t">Always</span><span class="fc-r"></span><span class="fc-s">nhebek ya 3omri 🤍</span></div>';
+          } else if (face.type === 'blank') {
+            el.classList.add('fb-blank');
+          } else {
+            el.classList.add('fb-page');
+            const grid = document.createElement('div'); grid.className = 'fb-grid n' + face.items.length;
+            face.items.forEach(it => grid.appendChild(makeSlot(it)));
+            el.appendChild(grid);
+            const num = document.createElement('div'); num.className = 'fb-num'; num.textContent = face.no;
+            el.appendChild(num);
+          }
+          return el;
+        }
+
+        const leaves = [];
+        for (let k = 0; k < leafCount; k++) {
+          const leaf = document.createElement('div'); leaf.className = 'leaf';
+          const front = makeFace(faces[2 * k]); front.classList.add('front');
+          const back = makeFace(faces[2 * k + 1]); back.classList.add('back');
+          leaf.appendChild(front); leaf.appendChild(back);
+          stage.appendChild(leaf); leaves.push(leaf);
+        }
+
+        // load a leaf's photos only when it's near the current spread (saves mobile data)
+        function loadLeaf(k) {
+          if (k < 0 || k >= leaves.length) return;
+          leaves[k].querySelectorAll('[data-src]').forEach(m => { m.src = m.getAttribute('data-src'); m.removeAttribute('data-src'); });
+        }
+
+        let current = 0;
+        const prog = $('#fbProgress'), prevB = $('#fbPrev'), nextB = $('#fbNext');
+        function update() {
+          leaves.forEach((leaf, k) => {
+            const flipped = k < current;
+            leaf.classList.toggle('flipped', flipped);
+            leaf.style.zIndex = flipped ? (10 + leafCount + k) : (10 + leafCount - k);
+          });
+          loadLeaf(current - 1); loadLeaf(current); loadLeaf(current + 1);
+          if (prevB) prevB.disabled = current === 0;
+          if (nextB) nextB.disabled = current >= leafCount;
+          if (prog) prog.textContent = current === 0 ? 'tap to open the cover'
+            : (current >= leafCount ? 'the end 🤍' : 'spread ' + current + ' / ' + (leafCount - 1));
+        }
+        function next() { if (current < leafCount) { current++; update(); } }
+        function prev() { if (current > 0) { current--; update(); } }
+
+        if (nextB) nextB.addEventListener('click', next);
+        if (prevB) prevB.addEventListener('click', prev);
+        // tap left / right half of the book to turn a page
+        bookEl.addEventListener('click', (e) => {
+          const r = bookEl.getBoundingClientRect();
+          (e.clientX - r.left) > r.width / 2 ? next() : prev();
         });
+        // swipe to turn
+        let sx = 0, sw = false;
+        bookEl.addEventListener('touchstart', (e) => { if (e.touches.length === 1) { sw = true; sx = e.touches[0].clientX; } else sw = false; }, { passive: true });
+        bookEl.addEventListener('touchend', (e) => { if (!sw) return; sw = false; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 45) { dx < 0 ? next() : prev(); } }, { passive: true });
+
+        update();
       })();
 
       /* =========================================================
@@ -2521,7 +2657,7 @@
             if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
           });
         }, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
-        document.querySelectorAll('.reveal, .reveal-fade').forEach(el => io.observe(el));
+        document.querySelectorAll('.reveal, .reveal-fade, .album-page').forEach(el => io.observe(el));
       }
 
       /* =========================================================

@@ -437,6 +437,29 @@ a{color:inherit;}
   text-shadow:0 6px 26px rgba(70,35,32,.55),0 2px 6px rgba(70,35,32,.45);}
 .poster-cap .pc-heart{display:block;margin-top:6px;font-size:18px;opacity:.9;filter:drop-shadow(0 2px 6px rgba(70,35,32,.5));}
 @media(prefers-reduced-motion:reduce){.poster-img{animation:none;transform:scale(1.08);}}
+/* video poster: it already moves, so no ken-burns */
+.poster-vid{animation:none !important;transform:scale(1.03);}
+
+/* ============================================================
+   DRIFTING FILMSTRIP (marquee)
+   ============================================================ */
+.marquee-sec{padding:clamp(46px,9vw,84px) 0;position:relative;overflow:hidden;}
+.marquee-sec .wrap{margin-bottom:26px;}
+.mq-row{overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);}
+.mq-row + .mq-row{margin-top:16px;}
+.mq-track{display:flex;gap:14px;width:max-content;will-change:transform;}
+#marqueeA{animation:mqMove 70s linear infinite;}
+#marqueeB{animation:mqMove 92s linear infinite reverse;}
+.marquee-sec:hover .mq-track{animation-play-state:paused;}
+@keyframes mqMove{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.mq-item{flex:0 0 auto;height:clamp(122px,27vw,196px);border-radius:16px;overflow:hidden;cursor:pointer;
+  box-shadow:var(--shadow-soft);background:linear-gradient(150deg,var(--blush-2),var(--butter-2));
+  transition:transform .4s var(--ease),box-shadow .4s var(--ease);}
+.mq-item:hover{transform:translateY(-4px) scale(1.02);box-shadow:var(--shadow-card);}
+.mq-item img{height:100%;width:auto;max-width:none;display:block;}
+@media(prefers-reduced-motion:reduce){.mq-track{animation:none !important;}.mq-row{overflow-x:auto;}}
 
 /* ============================================================
    LIGHTBOX
@@ -626,6 +649,17 @@ a{color:inherit;}
     </div>
   </section>
 
+  <!-- FILMSTRIP (drifting photos) -->
+  <section class="marquee-sec" id="marqueeSection">
+    <div class="wrap">
+      <p class="eyebrow reveal">us, on a loop</p>
+      <div class="h-deco reveal"></div>
+      <h2 class="section-title reveal">Moments in motion</h2>
+    </div>
+    <div class="mq-row"><div class="mq-track" id="marqueeA"></div></div>
+    <div class="mq-row"><div class="mq-track" id="marqueeB"></div></div>
+  </section>
+
   <!-- 4. PHOTO & VIDEO GALLERY -->
   <section class="section">
     <div class="wrap">
@@ -719,44 +753,73 @@ const CONFIG = {
     }
   ],
 
-  // ---- FEATURED "POSTER" MOMENTS (full-width cinematic photos) ----
-  // Change the photo or the line (line shows in elegant script over the photo).
+  // ---- FEATURED "POSTER" MOMENTS (full-width) ----
+  // Each shows ONE photo OR ONE auto-playing muted video, with a script line.
+  // Don't like a pick? Just swap the filename below.
   posters: [
-    { photo: 'assets/Eya/1.jpg', line: '3omri 🤍' },
-    { photo: 'assets/Eya/Snapchat-1760708115.jpg', line: 'niro benty' }
-  ],
-
-  // ---- PHOTO & VIDEO GALLERY (all your moments) ----
-  gallery: [
-    { type:'image', src:'assets/Eya/1.jpg', caption:'' },
-    { type:'image', src:'assets/Eya/IMG_20240709_192250.jpg', caption:'' },
-    { type:'image', src:'assets/Eya/IMG_20240816_194551.jpg', caption:'' },
-    { type:'image', src:'assets/Eya/IMG_20240902_185401.jpg', caption:'' },
-    { type:'image', src:'assets/Eya/IMG_20240914_150122.jpg', caption:'' },
-    { type:'video', src:'assets/Eya/VID-20260704-WA0027.mp4', caption:'' },
-    { type:'image', src:'assets/Eya/IMG_20241209_155515.jpg', caption:'' },
-    { type:'image', src:'assets/Eya/IMG_20250409_183308.jpg', caption:'' },
-    { type:'image', src:'assets/Eya/IMG_20250518_170630.jpg', caption:'' },
-    { type:'image', src:'assets/Eya/IMG-20250814-WA0000.jpg', caption:'' },
-    { type:'image', src:'assets/Eya/IMG-20250816-WA0004.jpg', caption:'' },
-    { type:'image', src:'assets/Eya/IMG_20251117_150423.jpg', caption:'' },
-    { type:'image', src:'assets/Eya/Screenshot_2026-01-11-00-07-16-536_com.whatsapp.jpg', caption:'' },
-    { type:'image', src:'assets/Eya/IMG-20260702-WA0000.jpg', caption:'' },
-    { type:'image', src:'assets/Eya/IMG-20260706-WA0018.jpg', caption:'' },
-    { type:'image', src:'assets/Eya/IMG-20260706-WA0021.jpg', caption:'' },
-    { type:'image', src:'assets/Eya/IMG_20260509_140110.jpg', caption:'' },
-    { type:'image', src:'assets/Eya/IMG_20260710_200157_625.webp', caption:'' },
-    { type:'image', src:'assets/Eya/Snapchat-1760708115.jpg', caption:'' },
-    { type:'image', src:'assets/Eya/1784301145676.jpg', caption:'' },
-    { type:'image', src:'assets/Eya/_storage_emulated_0_Android_media_com.whatsapp_WhatsApp_Media_WhatsApp Images_IMG-20250814-WA0002.jpg', caption:'' },
-    { type:'image', src:'assets/Eya/_storage_emulated_0_Android_media_com.whatsapp_WhatsApp_Media_WhatsApp Images_IMG-20250814-WA0007.jpg', caption:'' }
+    { photo: 'assets/Eya/IMG-20260717-WA0030.jpg', line: '3omri 🤍' },
+    { video: 'assets/Eya/VID-20260717-WA0082.mp4', line: 'niro benty 🤍' }
   ],
 
   // ---- CLOSING FAVOURITE PHOTO ----
-  closingPhoto: 'assets/Eya/1784301145676.jpg',
+  closingPhoto: 'assets/Eya/IMG-20260717-WA0060.jpg',
+
+  // NOTE: the big GALLERY and the drifting FILMSTRIP are built automatically
+  // from the MEDIA list below (every image + video in /assets/Eya).
 
   // ---- THE LOVE LETTER (kept exactly as written) ----
   letter: 'nehbk ta3ref ili kol haja tabta dima tkoun a7la na3ch9 4a7ktek wfar7tek w3inik l7lowin'
+};
+
+/* AUTO-GENERATED — every image & video in /assets/Eya.
+   If you add or remove files, just add/remove the filename in the right list. */
+const MEDIA = {
+  images: [
+    'IMG-20260706-WA0021.jpg', 'IMG-20260717-WA0072.jpg', 'IMG-20260717-WA0078.jpg',
+    'IMG-20260717-WA0020.jpg', 'IMG-20260717-WA0046.jpg', 'IMG_20250518_170630.jpg',
+    'IMG-20250814-WA0000.jpg', 'IMG-20260717-WA0088.jpg', 'IMG-20260717-WA0104.jpg',
+    '1784301145676.jpg', 'IMG-20260717-WA0022.jpg', 'IMG-20260717-WA0045.jpg',
+    'IMG-20260717-WA0060.jpg', 'IMG-20260717-WA0052.jpg', 'IMG-20260702-WA0000.jpg',
+    'IMG-20260717-WA0056.jpg', 'IMG-20260717-WA0100.jpg', 'IMG-20260717-WA0089.jpg',
+    'IMG-20260717-WA0043.jpg', 'IMG-20260717-WA0099.jpg', 'IMG-20260717-WA0032.jpg',
+    'IMG-20260717-WA0074.jpg', 'IMG-20260717-WA0110.jpg', 'IMG-20260717-WA0048.jpg',
+    'IMG-20260717-WA0027.jpg', 'Snapchat-1760708115.jpg', 'IMG-20260717-WA0050.jpg',
+    'IMG-20260717-WA0025.jpg', 'IMG-20260717-WA0083.jpg', 'IMG-20260717-WA0093.jpg',
+    'IMG-20260717-WA0057.jpg', 'IMG-20260717-WA0095.jpg', 'IMG-20260717-WA0047.jpg',
+    'IMG-20260717-WA0098.jpg', 'IMG-20260717-WA0069.jpg', 'IMG-20260717-WA0039.jpg',
+    'IMG-20260717-WA0071.jpg', 'IMG-20260717-WA0029.jpg', 'IMG-20260717-WA0087.jpg',
+    'IMG-20260717-WA0017.jpg', 'IMG-20260717-WA0103.jpg', 'IMG-20260717-WA0105.jpg',
+    'IMG-20260717-WA0062.jpg', '_storage_emulated_0_Android_media_com.whatsapp_WhatsApp_Media_WhatsApp Images_IMG-20250814-WA0007.jpg', 'IMG-20250816-WA0004.jpg',
+    'IMG-20260717-WA0044.jpg', 'IMG-20260717-WA0054.jpg', 'IMG-20260717-WA0084.jpg',
+    'IMG-20260717-WA0061.jpg', 'IMG-20260717-WA0053.jpg', 'IMG-20260706-WA0018.jpg',
+    'IMG-20260717-WA0070.jpg', 'IMG-20260717-WA0030.jpg', 'Screenshot_2026-01-11-00-07-16-536_com.whatsapp.jpg',
+    'IMG_20240902_185401.jpg', 'IMG_20240709_192250.jpg', 'IMG-20260717-WA0028.jpg',
+    'IMG-20260717-WA0097.jpg', 'IMG-20260717-WA0064.jpg', 'IMG-20260717-WA0092.jpg',
+    'IMG-20260717-WA0041.jpg', 'IMG_20260509_140110.jpg', 'IMG-20260717-WA0023.jpg',
+    'IMG-20260717-WA0085.jpg', 'IMG_20240816_194551.jpg', 'IMG-20260717-WA0086.jpg',
+    'IMG-20260717-WA0080.jpg', 'IMG-20260717-WA0079.jpg', 'IMG-20260717-WA0096.jpg',
+    'IMG-20260717-WA0066.jpg', 'IMG-20260717-WA0031.jpg', 'IMG-20260717-WA0038.jpg',
+    'IMG-20260717-WA0026.jpg', '_storage_emulated_0_Android_media_com.whatsapp_WhatsApp_Media_WhatsApp Images_IMG-20250814-WA0002.jpg', 'IMG_20260710_200157_625.webp',
+    'IMG-20260717-WA0049.jpg', 'IMG-20260717-WA0111.jpg', 'IMG-20260717-WA0036.jpg',
+    'IMG-20260717-WA0076.jpg', 'IMG_20250409_183308.jpg', 'IMG-20260717-WA0024.jpg',
+    'IMG-20260717-WA0077.jpg', 'IMG_20241209_155515.jpg', 'IMG-20260717-WA0063.jpg',
+    '1.jpg', 'IMG-20260717-WA0107.jpg', 'IMG-20260717-WA0101.jpg',
+    'IMG-20260717-WA0073.jpg', 'IMG-20260717-WA0112.jpg', 'IMG-20260717-WA0109.jpg',
+    'IMG-20260717-WA0037.jpg', 'IMG-20260717-WA0108.jpg', 'IMG-20260717-WA0065.jpg',
+    'IMG_20251117_150423.jpg', 'IMG-20260717-WA0021.jpg', 'IMG-20260717-WA0091.jpg',
+    'IMG-20260717-WA0059.jpg', 'IMG-20260717-WA0051.jpg', 'IMG-20260717-WA0106.jpg',
+    'IMG-20260717-WA0067.jpg', 'IMG-20260717-WA0068.jpg', 'IMG-20260717-WA0042.jpg',
+    'IMG-20260717-WA0094.jpg', 'IMG-20260717-WA0019.jpg', 'IMG-20260717-WA0034.jpg',
+    'IMG-20260717-WA0058.jpg', 'IMG-20260717-WA0035.jpg', 'IMG-20260717-WA0055.jpg',
+    'IMG-20260717-WA0033.jpg', 'IMG-20260717-WA0018.jpg', 'IMG-20260717-WA0075.jpg',
+    'IMG_20240914_150122.jpg', 'IMG-20260717-WA0102.jpg', 'IMG-20260717-WA0040.jpg',
+    'IMG-20260717-WA0081.jpg', 'IMG-20260717-WA0090.jpg'
+  ],
+  videos: [
+    'VID-20260704-WA0027.mp4', 'VID-20260717-WA0082.mp4', 'VID-20260717-WA0113.mp4',
+    'VID-20260717-WA0114.mp4', 'VID-20260717-WA0115.mp4', 'VID-20260717-WA0116.mp4',
+    'VID-20260717-WA0117.mp4', 'VID-20260717-WA0118.mp4', 'VID-20260717-WA0119.mp4'
+  ]
 };
 
 /* ================================================================
@@ -768,6 +831,7 @@ const CONFIG = {
   const enc = (p)=> p ? p.split('/').map(encodeURIComponent).join('/') : p;
   const isPh = (s)=> !s || s.indexOf('{{')>-1;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ASSET = 'assets/Eya/';
 
   /* ---------- placeholder-safe media ---------- */
   function mediaTile(src, cls){
@@ -814,9 +878,19 @@ const CONFIG = {
      GALLERY + LIGHTBOX
      ========================================================= */
   const viewable=[]; // items that can open in lightbox
+  // gallery is built from MEDIA: all photos, with videos sprinkled evenly through
+  const galleryItems=(function(){
+    const imgs=(MEDIA.images||[]).map(n=>({type:'image',src:ASSET+n}));
+    const vids=(MEDIA.videos||[]).map(n=>({type:'video',src:ASSET+n}));
+    if(!vids.length) return imgs;
+    const out=imgs.slice();
+    const gap=Math.max(1,Math.floor(imgs.length/(vids.length+1)));
+    vids.forEach((v,i)=>{ out.splice(Math.min(out.length,(i+1)*gap+i),0,v); });
+    return out;
+  })();
   (function renderGallery(){
     const box=$('#gallery');
-    CONFIG.gallery.forEach(item=>{
+    galleryItems.forEach(item=>{
       const wrap=document.createElement('div');
       wrap.className='g-item';
       if(item.type==='video' && !isPh(item.src)){
@@ -846,14 +920,51 @@ const CONFIG = {
     (CONFIG.posters||[]).forEach((p,i)=>{
       const sec=document.getElementById('poster'+(i+1));
       if(!sec) return;
-      if(isPh(p.photo)){ sec.remove(); return; }
-      const img=document.createElement('img');
-      img.className='poster-img';img.loading='lazy';img.decoding='async';img.alt='Us';
-      img.src=enc(p.photo);
-      img.onerror=()=>sec.remove();
+      const file=p.video||p.photo;
+      if(isPh(file)){ sec.remove(); return; }
+      let el;
+      if(p.video){
+        el=document.createElement('video');
+        el.className='poster-img poster-vid';el.src=enc(p.video);
+        el.muted=true;el.loop=true;el.autoplay=true;el.playsInline=true;el.preload='metadata';
+        el.setAttribute('playsinline','');el.setAttribute('muted','');
+        const pr=el.play&&el.play(); if(pr&&pr.catch) pr.catch(()=>{});
+      }else{
+        el=document.createElement('img');
+        el.className='poster-img';el.loading='lazy';el.decoding='async';el.alt='Us';
+        el.src=enc(p.photo);
+      }
+      el.onerror=()=>sec.remove();
       const cap=document.createElement('div');cap.className='poster-cap reveal';
       cap.innerHTML='<div class="pc-script">'+(p.line||'')+'</div><span class="pc-heart">❤</span>';
-      sec.appendChild(img);sec.appendChild(cap);
+      sec.appendChild(el);sec.appendChild(cap);
+    });
+  })();
+
+  /* =========================================================
+     DRIFTING FILMSTRIP (marquee — two rows, opposite ways)
+     ========================================================= */
+  (function renderMarquee(){
+    const secEl=document.getElementById('marqueeSection');
+    const A=$('#marqueeA'), B=$('#marqueeB');
+    if(!secEl||!A||!B) return;
+    const imgs=(MEDIA.images||[]);
+    if(imgs.length<6){ secEl.remove(); return; }
+    const count=Math.min(20,imgs.length), step=imgs.length/count, pick=[];
+    for(let i=0;i<count;i++) pick.push(imgs[Math.floor(i*step)]);
+    const half=Math.ceil(pick.length/2);
+    const rows=[pick.slice(0,half), (pick.slice(half).length?pick.slice(half):pick.slice(0,half))];
+    [A,B].forEach((track,r)=>{
+      // duplicate the row so the loop is seamless
+      [...rows[r],...rows[r]].forEach(name=>{
+        const d=document.createElement('div');d.className='mq-item';
+        const img=document.createElement('img');img.loading='lazy';img.decoding='async';img.alt='Us';
+        img.src=enc(ASSET+name);
+        img.onerror=()=>d.remove();
+        d.appendChild(img);
+        d.addEventListener('click',()=>{ const idx=viewable.findIndex(v=>v.src===ASSET+name); if(idx>=0) openLightbox(idx); });
+        track.appendChild(d);
+      });
     });
   })();
 
